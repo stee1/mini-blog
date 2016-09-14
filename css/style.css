@@ -48,3 +48,11 @@ textarea {
 .bx-wrapper {
     margin-bottom: 20px;
 }
+
+.comments-container {
+
+}
+
+.comments-container ul p {
+    display: inline;
+}
