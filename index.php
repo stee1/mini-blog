@@ -1,10 +1,26 @@
+<?php
+require_once 'db_connection.php';
+
+
+$select_query = "SELECT * FROM record WHERE id_record = 1";
+
+$result = $mysqli->query($select_query);
+if ($result) {
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    $author = $row['author'];
+}
+else {
+    echo "error";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mini-blog | Вася (12.43.12)</title>
+    <title>Mini-blog | Все записи</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/jquery.bxslider.css">
     <link rel="stylesheet" href="css/style.css">
@@ -19,10 +35,10 @@
 <body>
 <!--HEADER-->
 <header id="header" class="container-fluid">
-    <a href="index.html"><h1 class="text-center">mini-blog</h1></a>
+    <a href="index.php"><h1 class="text-center">mini-blog</h1></a>
 </header>
 <!--END HEADER-->
-
+<?php echo $author;?>
 <!--CONTENT-->
 <div class="content container-fluid">
 
@@ -37,7 +53,7 @@
                     blanditiis consequa.</p>
 
                 <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.html" class="pull-right">Читать полностью</a>
+                <a href="record.php" class="pull-right">Читать полностью</a>
             </li>
             <li>
                 <p>Author 2 (<span>12.45.12</span>)</p>
@@ -46,7 +62,7 @@
                     blanditiis consequa.</p>
 
                 <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.html" class="pull-right">Читать полностью</a>
+                <a href="record.php" class="pull-right">Читать полностью</a>
             </li>
             <li>
                 <p>Author 3 (<span>12.45.12</span>)</p>
@@ -55,7 +71,7 @@
                     blanditiis consequa.</p>
 
                 <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.html" class="pull-right">Читать полностью</a>
+                <a href="record.php" class="pull-right">Читать полностью</a>
             </li>
             <li>
                 <p>Author 4 (<span>12.45.12</span>)</p>
@@ -64,7 +80,7 @@
                     blanditiis consequa.</p>
 
                 <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.html" class="pull-right">Читать полностью</a>
+                <a href="record.php" class="pull-right">Читать полностью</a>
             </li>
             <li>
                 <p>Author 5 (<span>12.45.12</span>)</p>
@@ -73,55 +89,32 @@
                     blanditiis consequa.</p>
 
                 <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.html" class="pull-right">Читать полностью</a>
+                <a href="record.php" class="pull-right">Читать полностью</a>
             </li>
 
         </ul>
     </div>
     <!-- END POPULAR RECORDS-->
 
-    <!-- RECORD-->
-    <div class="container">
-        <p>Author (<span>12.45.12</span>)</p>
+    <!-- LIST ALL RECORDS-->
+    <div id="all-records">
+        <!-- RECORD-->
+        <div class="container">
+            <p>Author (<span>12.45.12</span>)</p>
 
-        <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid amet aperiam assumenda
-            consectetur consequuntur deserunt dicta dignissimos doloremque doloribus dolorum ducimus id illo ipsum
-            laboriosam minima modi non nostrum, nulla obcaecati officia officiis pariatur porro quo quod ratione
-            sapiente soluta sunt temporibus veniam vero. Delectus dolor nam numquam pariatur porro.</p>
+            <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
+                blanditiis consequa.</p>
 
-        <!-- COMMENTS-->
-        <div class="comments-container">
-            <p class="form-caption">Комментарии:</p>
-            <ul class="list-unstyled">
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-            </ul>
+            <p class="comments">Коментариев <span class="badge">4</span></p>
+            <a href="record.php" class="pull-right">Читать полностью</a>
         </div>
-        <!-- END COMMENTS-->
+        <!-- END RECORD-->
     </div>
-    <!-- END RECORD-->
+    <!-- END LIST ALL RECORDS-->
 
     <!-- FORM NEW RECORD-->
     <div class="container">
-        <p class="form-caption">Добавить комментарий</p>
+        <p class="form-caption">Добавить запись</p>
 
         <form class="form-horizontal">
             <div class="form-group">
@@ -135,7 +128,7 @@
                 <label for="inputText" class="col-xs-1 control-label">Текст</label>
 
                 <div class="col-xs-11">
-                    <textarea id="inputText" class="form-control" rows="3" placeholder="Текст комментария"></textarea>
+                    <textarea id="inputText" class="form-control" rows="3" placeholder="Текст публикации"></textarea>
                 </div>
             </div>
             <div class="form-group">
