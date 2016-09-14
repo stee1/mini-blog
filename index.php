@@ -2,14 +2,35 @@
 require_once 'db_connection.php';
 
 
-$select_query = "SELECT * FROM record WHERE id_record = 1";
+$select_query = "SELECT * FROM record";
 
 $result = $mysqli->query($select_query);
 if ($result) {
-    $row = $result->fetch_array(MYSQLI_ASSOC);
-    $author = $row['author'];
-}
-else {
+
+    $all_data = array();
+
+    $i = 0;
+
+    while ($record = $result->fetch_array(MYSQLI_ASSOC)) {
+
+        $select_query_comments = "SELECT id_comment FROM comments WHERE id_record=".$record['id_record'];
+
+        $result_comments = $mysqli->query($select_query_comments);
+
+        if (!$result_comments) {
+            echo "error";
+        }
+
+        $all_data[$i] = [
+            'id_record' => $record['id_record'],
+            'author' => $record['author'],
+            'date' => $record['date'],
+            'text' => $record['text'],
+            'num_comments' => $result_comments->num_rows,
+        ];
+        $i++;
+    }
+} else {
     echo "error";
 }
 ?>
@@ -33,12 +54,13 @@ else {
     <![endif]-->
 </head>
 <body>
+
 <!--HEADER-->
 <header id="header" class="container-fluid">
     <a href="index.php"><h1 class="text-center">mini-blog</h1></a>
 </header>
 <!--END HEADER-->
-<?php echo $author;?>
+
 <!--CONTENT-->
 <div class="content container-fluid">
 
@@ -98,17 +120,19 @@ else {
 
     <!-- LIST ALL RECORDS-->
     <div id="all-records">
-        <!-- RECORD-->
-        <div class="container">
-            <p>Author (<span>12.45.12</span>)</p>
+        <?php foreach ($all_data as $record) { ?>
+            <!-- RECORD-->
+            <div class="container">
+                <p><?=$record['author']?> (<span><?=$record['date']?></span>)</p>
 
-            <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                blanditiis consequa.</p>
+                <p class="record-text"><?=mb_substr($record['text'], 0, 97).'...';?></p>
 
-            <p class="comments">Коментариев <span class="badge">4</span></p>
-            <a href="record.php" class="pull-right">Читать полностью</a>
-        </div>
-        <!-- END RECORD-->
+                <p class="comments">Коментариев <span class="badge"><?=$record['num_comments']?></span></p>
+                <a href="record.php" class="pull-right">Читать полностью</a>
+            </div>
+            <!-- END RECORD-->
+        <?php } ?>
+
     </div>
     <!-- END LIST ALL RECORDS-->
 
