@@ -3,6 +3,15 @@
     text-transform: uppercase;
 }
 
+#header a {
+    color: #333;
+}
+
+#header a:hover {
+    color: #555;
+    text-decoration: none;
+}
+
 #footer {
     padding: 5px 0;
 }
