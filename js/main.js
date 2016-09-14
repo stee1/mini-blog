@@ -1,3 +1,3 @@
-/**
- * Created by dmitry on 14.09.2016.
- */
+$(document).ready(function(){
+    $('.bxslider').bxSlider();
+});

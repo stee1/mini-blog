@@ -1,0 +1,50 @@
+#header, #footer {
+    background: #ccc;
+    text-transform: uppercase;
+}
+
+#footer {
+    padding: 5px 0;
+}
+
+.content {
+    background: #eee;
+}
+
+.container {
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #fff;
+    -webkit-box-shadow: 2px 2px 5px #555;
+    -moz-box-shadow: 2px 2px 5px #555;
+    box-shadow: 2px 2px 5px #555;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.record-container {
+
+}
+
+p.comments {
+    display: inline;
+}
+
+p.form-caption {
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.bx-viewport {
+    height: auto !important;
+}
+
+.bx-wrapper {
+    margin-bottom: 20px;
+}
