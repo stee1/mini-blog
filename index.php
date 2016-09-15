@@ -1,7 +1,6 @@
 <?php
 require_once 'db_connection.php';
 
-
 $select_query = "SELECT * FROM record";
 
 $result = $mysqli->query($select_query);
@@ -13,7 +12,7 @@ if ($result) {
 
     while ($record = $result->fetch_array(MYSQLI_ASSOC)) {
 
-        $select_query_comments = "SELECT id_comment FROM comments WHERE id_record=".$record['id_record'];
+        $select_query_comments = "SELECT id_comment FROM comments WHERE id_record=" . $record['id_record'];
 
         $result_comments = $mysqli->query($select_query_comments);
 
@@ -30,9 +29,41 @@ if ($result) {
         ];
         $i++;
     }
+
+    $all_data_sorted_by_comments = sortRecordsByComments($all_data);
 } else {
     echo "error";
 }
+
+function sortRecordsByComments($records)
+{
+    $result = $records;
+
+    for ($i = 0; $i < count($result); $i++) {
+        for ($j = 0; $j < count($result); $j++) {
+            if ($result[$i]['num_comments'] > $result[$j]['num_comments']) {
+                $tmp = $result[$j];
+                $result[$j] = $result[$i];
+                $result[$i] = $tmp;
+            }
+        }
+    }
+
+    return $result;
+}
+
+//Обрезает строку до 100 символов, учитывая добавляемое "...", с учетом слов
+function trimTo100Char($string)
+{
+    $tmp_str = mb_substr($string, 0, 97);
+    if ($tmp_str[96] != " ") {
+        $tmp_str = mb_substr($tmp_str, 0, strripos($tmp_str, " "));
+    } else {
+        $tmp_str = rtrim($tmp_str);
+    }
+    return $tmp_str . '...';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -68,51 +99,20 @@ if ($result) {
     <div class="container">
         <p class="text-center form-caption">Популярные записи</p>
         <ul class="bxslider">
-            <li>
-                <p>Author 1 (<span>12.45.12</span>)</p>
 
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
+            <?php for ($i = 0; $i < 5 && $i < count($all_data_sorted_by_comments); $i++) { ?>
+                <li>
+                    <p><?= $all_data_sorted_by_comments[$i]['author'] ?>
+                        (<span><?= $all_data_sorted_by_comments[$i]['date'] ?></span>)</p>
 
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 2 (<span>12.45.12</span>)</p>
+                    <p class="record-text"><?= trimTo100Char($all_data_sorted_by_comments[$i]['text']) ?></p>
 
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 3 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 4 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 5 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
+                    <p class="comments">Коментариев <span
+                            class="badge"><?= $all_data_sorted_by_comments[$i]['num_comments'] ?></span></p>
+                    <a href=<?= "record.php?id=" . $all_data_sorted_by_comments[$i]['id_record'] ?>class="pull-right">Читать
+                        полностью</a>
+                </li>
+            <?php } ?>
 
         </ul>
     </div>
@@ -123,12 +123,12 @@ if ($result) {
         <?php foreach ($all_data as $record) { ?>
             <!-- RECORD-->
             <div class="container">
-                <p><?=$record['author']?> (<span><?=$record['date']?></span>)</p>
+                <p><?= $record['author'] ?> (<span><?= $record['date'] ?></span>)</p>
 
-                <p class="record-text"><?=mb_substr($record['text'], 0, 97).'...';?></p>
+                <p class="record-text"><?= trimTo100Char($record['text']) ?></p>
 
-                <p class="comments">Коментариев <span class="badge"><?=$record['num_comments']?></span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
+                <p class="comments">Коментариев <span class="badge"><?= $record['num_comments'] ?></span></p>
+                <a href=<?= "record.php?id=" . $record['id_record'] ?>class="pull-right">Читать полностью</a>
             </div>
             <!-- END RECORD-->
         <?php } ?>
