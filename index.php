@@ -30,18 +30,21 @@ if ($result) {
         $i++;
     }
 
-    $all_data_sorted_by_comments = sortRecordsByComments($all_data);
+    $all_data_sorted_by_comments = sortRecordsBy($all_data, 'num_comments');
+
+    $all_data_sorted_by_date = sortRecordsBy($all_data, 'date');
+
 } else {
     echo "error";
 }
 
-function sortRecordsByComments($records)
+function sortRecordsBy($records, $field_name_to_sort)
 {
     $result = $records;
 
     for ($i = 0; $i < count($result); $i++) {
         for ($j = 0; $j < count($result); $j++) {
-            if ($result[$i]['num_comments'] > $result[$j]['num_comments']) {
+            if ($result[$i][$field_name_to_sort] > $result[$j][$field_name_to_sort]) {
                 $tmp = $result[$j];
                 $result[$j] = $result[$i];
                 $result[$i] = $tmp;
@@ -62,6 +65,18 @@ function trimTo100Char($string)
         $tmp_str = rtrim($tmp_str);
     }
     return $tmp_str . '...';
+}
+
+function echoRecord($record)
+{
+    return "<p>" . $record['author'] . "(<span>" . $record['date'] . "</span>)</p>
+                    <p class='record-text'>" . trimTo100Char($record['text']) . "</p>
+                    <a href='record.php?id=" . $record['id_record'] . "' class='comments-link'>
+                        <p class='comments'>Коментариев <span
+                                class='badge'>" . $record['num_comments'] . "</span></p>
+                    </a>
+                    <a href='record.php?id=" . $record['id_record'] . "' class='pull-right'>Читать
+                        полностью</a>";
 }
 
 ?>
@@ -102,15 +117,7 @@ function trimTo100Char($string)
 
             <?php for ($i = 0; $i < 5 && $i < count($all_data_sorted_by_comments); $i++) { ?>
                 <li>
-                    <p><?= $all_data_sorted_by_comments[$i]['author'] ?>
-                        (<span><?= $all_data_sorted_by_comments[$i]['date'] ?></span>)</p>
-
-                    <p class="record-text"><?= trimTo100Char($all_data_sorted_by_comments[$i]['text']) ?></p>
-
-                    <p class="comments">Коментариев <span
-                            class="badge"><?= $all_data_sorted_by_comments[$i]['num_comments'] ?></span></p>
-                    <a href=<?= "record.php?id=" . $all_data_sorted_by_comments[$i]['id_record'] ?>class="pull-right">Читать
-                        полностью</a>
+                    <?=echoRecord($all_data_sorted_by_comments[$i]);?>
                 </li>
             <?php } ?>
 
@@ -120,15 +127,10 @@ function trimTo100Char($string)
 
     <!-- LIST ALL RECORDS-->
     <div id="all-records">
-        <?php foreach ($all_data as $record) { ?>
+        <?php foreach ($all_data_sorted_by_date as $record) { ?>
             <!-- RECORD-->
             <div class="container">
-                <p><?= $record['author'] ?> (<span><?= $record['date'] ?></span>)</p>
-
-                <p class="record-text"><?= trimTo100Char($record['text']) ?></p>
-
-                <p class="comments">Коментариев <span class="badge"><?= $record['num_comments'] ?></span></p>
-                <a href=<?= "record.php?id=" . $record['id_record'] ?>class="pull-right">Читать полностью</a>
+                <?=echoRecord($record);?>
             </div>
             <!-- END RECORD-->
         <?php } ?>
