@@ -6,7 +6,7 @@
  * Time: 15:34
  */
 
-$mysqli = mysqli_connect("localhost", "root", "root", "mini-blog") ;
+$mysqli = mysqli_connect("localhost", "root", "root", "mini-blog");
 
 if (!$mysqli) {
     echo "возникла проблема, связанная с подключением к базе данных, " .

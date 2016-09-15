@@ -1,3 +1,45 @@
+<?php
+require_once 'functions.php';
+
+$all_data_sorted_by_comments = sortRecordsBy(getAllRecords($mysqli), 'num_comments');
+
+foreach ($all_data_sorted_by_comments as $record) {
+    if(empty($_GET['id'])) {
+        echo "error";
+        $current_record = null;
+    }
+    if ($record['id_record'] == $_GET['id']) {
+        $current_record = $record;
+    }
+}
+
+$select_query = "SELECT * FROM comments WHERE id_record=" . $current_record['id_record'];
+
+$result = $mysqli->query($select_query);
+if ($result) {
+
+    $comments = array();
+
+    $i = 0;
+
+    while ($comment = $result->fetch_array(MYSQLI_ASSOC)) {
+
+        $comments[$i] = [
+            'id_comment' => $comment['id_comment'],
+            'author' => $comment['author'],
+            'date' => $comment['date'],
+            'text' => $comment['text'],
+        ];
+        $i++;
+    }
+
+} else {
+    echo "error";
+    $comments = null;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -30,89 +72,32 @@
     <div class="container">
         <p class="text-center form-caption">Популярные записи</p>
         <ul class="bxslider">
-            <li>
-                <p>Author 1 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 2 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 3 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 4 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-            <li>
-                <p>Author 5 (<span>12.45.12</span>)</p>
-
-                <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae
-                    blanditiis consequa.</p>
-
-                <p class="comments">Коментариев <span class="badge">4</span></p>
-                <a href="record.php" class="pull-right">Читать полностью</a>
-            </li>
-
+            <?php for ($i = 0; $i < 5 && $i < count($all_data_sorted_by_comments); $i++) { ?>
+                <li>
+                    <?=echoRecord($all_data_sorted_by_comments[$i]);?>
+                </li>
+            <?php } ?>
         </ul>
     </div>
     <!-- END POPULAR RECORDS-->
 
     <!-- RECORD-->
     <div class="container">
-        <p>Author (<span>12.45.12</span>)</p>
+        <strong><p><?=$current_record['author']?> (<span><?=$current_record['date']?></span>)</p></strong>
 
-        <p class="record-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid amet aperiam assumenda
-            consectetur consequuntur deserunt dicta dignissimos doloremque doloribus dolorum ducimus id illo ipsum
-            laboriosam minima modi non nostrum, nulla obcaecati officia officiis pariatur porro quo quod ratione
-            sapiente soluta sunt temporibus veniam vero. Delectus dolor nam numquam pariatur porro.</p>
+        <p class="record-text"><?=$current_record['text']?></p>
 
         <!-- COMMENTS-->
         <div class="comments-container">
             <p class="form-caption">Комментарии:</p>
             <ul class="list-unstyled">
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
+                <?php foreach ($comments as $comment) { ?>
+                    <li>
+                        <strong><p><?= $comment['author'] ?> (<span><?= $comment['date'] ?></span>):</p></strong>
 
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
-                <li>
-                    <p>Author (<span>12.45.12</span>):</p>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                </li>
+                        <p><?= $comment['text'] ?></p>
+                    </li>
+                <?php } ?>
             </ul>
         </div>
         <!-- END COMMENTS-->
