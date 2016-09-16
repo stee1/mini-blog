@@ -61,18 +61,23 @@ function sortRecordsBy($records, $field_name_to_sort)
 //Обрезает строку до 100 символов, учитывая добавляемое "...", с учетом слов
 function trimTo100Char($string)
 {
-    $tmp_str = mb_substr($string, 0, 97);
-    if ($tmp_str[96] != " ") {
-        $tmp_str = mb_substr($tmp_str, 0, strripos($tmp_str, " "));
-    } else {
-        $tmp_str = rtrim($tmp_str);
+    if ( strlen ($string) > 97) {
+        $tmp_str = mb_substr($string, 0, 97);
+        if ($tmp_str[96] != " ") {
+            $tmp_str = mb_substr($tmp_str, 0, strripos($tmp_str, " "));
+        } else {
+            $tmp_str = rtrim($tmp_str);
+        }
+        return $tmp_str . '...';
     }
-    return $tmp_str . '...';
+    else {
+        return $string;
+    }
 }
 
 function echoRecord($record)
 {
-    return "<strong><p>" . $record['author'] . "(<span>" . $record['date'] . "</span>)</p></strong>
+    return "<strong><p>" . $record['author'] . " (<span>" . $record['date'] . "</span>)</p></strong>
                     <p class='record-text'>" . trimTo100Char($record['text']) . "</p>
                     <a href='record.php?id=" . $record['id_record'] . "' class='comments-link'>
                         <p class='comments'>Коментариев <span

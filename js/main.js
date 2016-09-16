@@ -1,5 +1,7 @@
 $(document).ready(function () {
     $('.bxslider').bxSlider();
+
+    $(window).scrollTop(0);
 });
 
 jQuery.validator.addMethod("lettersonly", function(value, element) {
@@ -52,10 +54,18 @@ $("#form_record").on('submit', function(e){
     if(isvalidate)
     {
         e.preventDefault();
-        alert("record form valid. add data to db");
+
+        $.post(
+            'db_insert.php',
+            {name: $("#inputName").val(), text: $("#inputText").val()},
+            function (data) {
+
+                if (data === "OK") {
+                    location.reload();
+                }
+            });
     }
 });
-
 
 $("#form_comment").validate({
     rules: {
