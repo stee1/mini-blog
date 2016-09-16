@@ -3,6 +3,7 @@ require_once 'functions.php';
 
 $all_data_sorted_by_comments = sortRecordsBy(getAllRecords($mysqli), 'num_comments');
 $all_data_sorted_by_date = sortRecordsBy(getAllRecords($mysqli), 'date');
+
 ?>
 
 <!DOCTYPE html>
@@ -64,19 +65,23 @@ $all_data_sorted_by_date = sortRecordsBy(getAllRecords($mysqli), 'date');
     <div class="container">
         <p class="form-caption">Добавить запись</p>
 
-        <form class="form-horizontal">
-            <div class="form-group">
+        <form id="form_record" class="form-horizontal">
+            <div class="form-group has-feedback">
                 <label for="inputName" class="col-xs-1 control-label">Автор</label>
 
                 <div class="col-xs-11">
-                    <input type="text" class="form-control" id="inputName" placeholder="Имя">
+                    <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Имя">
+                    <span class="glyphicon form-control-feedback" id="inputName1"></span>
                 </div>
+
             </div>
-            <div class="form-group">
+            <div class="form-group has-feedback">
                 <label for="inputText" class="col-xs-1 control-label">Текст</label>
 
                 <div class="col-xs-11">
-                    <textarea id="inputText" class="form-control" rows="3" placeholder="Текст публикации"></textarea>
+                    <textarea id="inputText" name="inputText" class="form-control" rows="3"
+                              placeholder="Текст публикации"></textarea>
+                    <span class="glyphicon form-control-feedback" id="inputText1"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -97,6 +102,7 @@ $all_data_sorted_by_date = sortRecordsBy(getAllRecords($mysqli), 'date');
 <!--END FOOTER-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
 <script src="js/jquery.bxslider.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
