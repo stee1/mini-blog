@@ -46,7 +46,7 @@ if ($result) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mini-blog | Вася (12.43.12)</title>
+    <title>Mini-blog | <?=$current_record['author']?> (<?=$current_record['date']?>)</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/jquery.bxslider.css">
     <link rel="stylesheet" href="css/style.css">
@@ -108,19 +108,21 @@ if ($result) {
     <div class="container">
         <p class="form-caption">Добавить комментарий</p>
 
-        <form class="form-horizontal">
-            <div class="form-group">
+        <form id="form_comment" class="form-horizontal">
+            <div class="form-group has-feedback">
                 <label for="inputName" class="col-xs-1 control-label">Автор</label>
 
                 <div class="col-xs-11">
-                    <input type="text" class="form-control" id="inputName" placeholder="Имя">
+                    <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Имя">
+                    <span class="glyphicon form-control-feedback" id="inputName1"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group has-feedback">
                 <label for="inputText" class="col-xs-1 control-label">Текст</label>
 
                 <div class="col-xs-11">
-                    <textarea id="inputText" class="form-control" rows="3" placeholder="Текст комментария"></textarea>
+                    <textarea id="inputText" name="inputText" class="form-control" rows="3" placeholder="Текст комментария"></textarea>
+                    <span class="glyphicon form-control-feedback" id="inputText1"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -141,6 +143,7 @@ if ($result) {
 <!--END FOOTER-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
 <script src="js/jquery.bxslider.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
