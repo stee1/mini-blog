@@ -79,10 +79,10 @@ function echoRecord($record)
 {
     return "<strong><p>" . $record['author'] . " (<span>" . $record['date'] . "</span>)</p></strong>
                     <p class='record-text'>" . trimTo100Char($record['text']) . "</p>
-                    <a href='record.php?id=" . $record['id_record'] . "' class='comments-link'>
+                    <a href='record-" . $record['id_record'] . "' class='comments-link'>
                         <p class='comments'>Коментариев <span
                                 class='badge'>" . $record['num_comments'] . "</span></p>
                     </a>
-                    <a href='record.php?id=" . $record['id_record'] . "' class='pull-right'>Читать
+                    <a href='record-" . $record['id_record'] . "' class='pull-right'>Читать
                         полностью</a>";
 }

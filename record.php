@@ -61,7 +61,7 @@ if ($result) {
 <body>
 <!--HEADER-->
 <header id="header" class="container-fluid">
-    <a href="index.php"><h1 class="text-center">mini-blog</h1></a>
+    <a href="/mini-blog/"><h1 class="text-center">mini-blog</h1></a>
 </header>
 <!--END HEADER-->
 

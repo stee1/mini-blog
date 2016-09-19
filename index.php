@@ -28,7 +28,7 @@ $all_data_sorted_by_date = sortRecordsBy(getAllRecords($mysqli), 'date');
 
 <!--HEADER-->
 <header id="header" class="container-fluid">
-    <a href="index.php"><h1 class="text-center">mini-blog</h1></a>
+    <a href="/mini-blog/"><h1 class="text-center">mini-blog</h1></a>
 </header>
 <!--END HEADER-->
 
