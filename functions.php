@@ -1,6 +1,33 @@
 <?php
 require_once 'db_connection.php';
 
+function getCommentsByRecord($mysqli, $id_record) {
+
+    $select_query = "SELECT * FROM comments WHERE id_record=" . $id_record;
+
+    $result = $mysqli->query($select_query);
+    if (!$result) {
+        header("Location: error.php?db_table_read_error=" . $mysqli->error);
+        exit();
+    }
+
+    $comments = array();
+
+    $i = 0;
+
+    while ($comment = $result->fetch_array(MYSQLI_ASSOC)) {
+
+        $comments[$i] = [
+            'id_comment' => $comment['id_comment'],
+            'author' => $comment['author'],
+            'date' => $comment['date'],
+            'text' => $comment['text'],
+        ];
+        $i++;
+    }
+
+    return $comments;
+}
 
 function getAllRecords($mysqli) {
 
@@ -20,7 +47,8 @@ function getAllRecords($mysqli) {
             $result_comments = $mysqli->query($select_query_comments);
 
             if (!$result_comments) {
-                echo "error";
+                header("Location: error.php?db_table_read_error=" . $mysqli->error);
+                exit();
             }
 
             $all_data[$i] = [
@@ -34,8 +62,8 @@ function getAllRecords($mysqli) {
         }
 
     } else {
-        echo "error";
-        $all_data = null;
+        header("Location: error.php?db_table_read_error=" . $mysqli->error);
+        exit();
     }
 
     return $all_data;

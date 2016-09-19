@@ -62,6 +62,10 @@ $("#form_record").on('submit', function (e) {
                 if (data === "OK") {
                     location.reload();
                 }
+                else {
+                    var result = data.split(";");
+                    window.location.replace("error.php?db_table_write_error="+result[0]+"&sql="+result[1]);
+                }
             });
     }
 });
@@ -125,16 +129,21 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 $("#form_comment").on('submit', function (e) {
     var isvalidate = $("#form_comment").valid();
+
     if (isvalidate) {
         e.preventDefault();
 
         $.post(
             'db_insert.php',
-            {id_record: getUrlParameter('id'), name: $("#inputName").val(), text: $("#inputText").val(), table_name: "comments"},
+            {id_record: $("#id_record").text(), name: $("#inputName").val(), text: $("#inputText").val(), table_name: "comments"},
             function (data) {
 
                 if (data === "OK") {
                     location.reload();
+                }
+                else {
+                    var result = data.split(";");
+                    window.location.replace("error.php?db_table_write_error="+result[0]+"&sql="+result[1]);
                 }
             });
     }

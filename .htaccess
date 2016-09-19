@@ -7,7 +7,7 @@ RewriteRule ^record-([0-9]+)$ record.php?id=$1 [L]
 #RewriteRule  ^/$                 /index.php  [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /mini-blog/error.php?q=$1 [QSA,L]
+RewriteRule ^(.*)$ /mini-blog/error.php?page=$1 [QSA,L]
 </IfModule>
 
 

@@ -4,7 +4,7 @@ require_once 'functions.php';
 $all_data_sorted_by_comments = sortRecordsBy(getAllRecords($mysqli), 'num_comments');
 
 foreach ($all_data_sorted_by_comments as $record) {
-    if(empty($_GET['id'])) {
+    if (empty($_GET['id'])) {
         echo "error";
         $current_record = null;
     }
@@ -13,30 +13,7 @@ foreach ($all_data_sorted_by_comments as $record) {
     }
 }
 
-$select_query = "SELECT * FROM comments WHERE id_record=" . $current_record['id_record'];
-
-$result = $mysqli->query($select_query);
-if ($result) {
-
-    $comments = array();
-
-    $i = 0;
-
-    while ($comment = $result->fetch_array(MYSQLI_ASSOC)) {
-
-        $comments[$i] = [
-            'id_comment' => $comment['id_comment'],
-            'author' => $comment['author'],
-            'date' => $comment['date'],
-            'text' => $comment['text'],
-        ];
-        $i++;
-    }
-
-} else {
-    echo "error";
-    $comments = null;
-}
+$comments = getCommentsByRecord($mysqli, $current_record['id_record']);
 
 ?>
 
@@ -80,6 +57,8 @@ if ($result) {
         </ul>
     </div>
     <!-- END POPULAR RECORDS-->
+
+    <p id="id_record" style="display: none;"><?=$current_record['id_record']?></p>
 
     <!-- RECORD-->
     <div class="container">
