@@ -8,6 +8,26 @@ jQuery.validator.addMethod("lettersonly", function (value, element) {
     return this.optional(element) || /^[a-zА-Я0-9\s]+$/i.test(value);
 }, "Имя автора должно состоять только из букв и цифр");
 
+function highlihtElement(element) {
+    var id_attr = "#" + $(element).attr("id") + "1";
+    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+    $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+}
+
+function unHighlihtElement(element) {
+    var id_attr = "#" + $(element).attr("id") + "1";
+    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+    $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+}
+
+function errorPlacementElement(error, element) {
+    if (element.length) {
+        error.insertAfter(element);
+    } else {
+        error.insertAfter(element);
+    }
+}
+
 $("#form_record").validate({
     rules: {
         inputName: {
@@ -28,46 +48,11 @@ $("#form_record").validate({
         },
         inputText: "Введите текст публикации",
     },
-    highlight: function (element) {
-        var id_attr = "#" + $(element).attr("id") + "1";
-        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-        $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-    },
-    unhighlight: function (element) {
-        var id_attr = "#" + $(element).attr("id") + "1";
-        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-        $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
-    },
+    highlight: highlihtElement,
+    unhighlight: unHighlihtElement,
     errorElement: 'span',
     errorClass: 'help-block',
-    errorPlacement: function (error, element) {
-        if (element.length) {
-            error.insertAfter(element);
-        } else {
-            error.insertAfter(element);
-        }
-    }
-});
-
-$("#form_record").on('submit', function (e) {
-    var isvalidate = $("#form_record").valid();
-    if (isvalidate) {
-        e.preventDefault();
-
-        $.post(
-            'db_insert.php',
-            {name: $("#inputName").val(), text: $("#inputText").val(), table_name: "record"},
-            function (data) {
-
-                if (data === "OK") {
-                    location.reload();
-                }
-                else {
-                    var result = data.split(";");
-                    window.location.replace("error.php?db_table_write_error="+result[0]+"&sql="+result[1]);
-                }
-            });
-    }
+    errorPlacement: errorPlacementElement
 });
 
 $("#form_comment").validate({
@@ -90,52 +75,43 @@ $("#form_comment").validate({
         },
         inputText: "Введите текст комментария",
     },
-    highlight: function (element) {
-        var id_attr = "#" + $(element).attr("id") + "1";
-        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-        $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-    },
-    unhighlight: function (element) {
-        var id_attr = "#" + $(element).attr("id") + "1";
-        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-        $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
-    },
+    highlight: highlihtElement,
+    unhighlight: unHighlihtElement,
     errorElement: 'span',
     errorClass: 'help-block',
-    errorPlacement: function (error, element) {
-        if (element.length) {
-            error.insertAfter(element);
-        } else {
-            error.insertAfter(element);
-        }
-    }
-
+    errorPlacement: errorPlacementElement
 });
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
+$("#form_record button").attr('tableName', 'record');
+$("#form_comment button").attr('tableName', 'comments');
 
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
+function mySubmitHandler(e) {
+    var formName = $(e).attr('target').id;
+    var isvalidate;
 
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
-
-$("#form_comment").on('submit', function (e) {
-    var isvalidate = $("#form_comment").valid();
+    isvalidate = $("#" + formName).valid();
 
     if (isvalidate) {
         e.preventDefault();
 
+        var inputParams;
+        switch ($("#" + formName + " button").attr('tableName')) {
+            case 'record' :
+                inputParams = {name: $("#inputName").val(), text: $("#inputText").val(), table_name: "record"};
+                break;
+            case 'comments' :
+                inputParams = {
+                    id_record: $("#id_record").text(),
+                    name: $("#inputName").val(),
+                    text: $("#inputText").val(),
+                    table_name: "comments"
+                };
+                break;
+        }
+
         $.post(
             'db_insert.php',
-            {id_record: $("#id_record").text(), name: $("#inputName").val(), text: $("#inputText").val(), table_name: "comments"},
+            inputParams,
             function (data) {
 
                 if (data === "OK") {
@@ -143,8 +119,13 @@ $("#form_comment").on('submit', function (e) {
                 }
                 else {
                     var result = data.split(";");
-                    window.location.replace("error.php?db_table_write_error="+result[0]+"&sql="+result[1]);
+                    window.location.replace("error.php?db_table_write_error=" + result[0] + "&sql=" + result[1]);
                 }
             });
     }
-});
+}
+
+$("#form_record").on('submit', mySubmitHandler);
+
+$("#form_comment").on('submit', mySubmitHandler);
+
