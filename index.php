@@ -4,6 +4,8 @@ require_once 'functions.php';
 $all_data_sorted_by_comments = sortRecordsBy(getAllRecords($mysqli), 'num_comments');
 $all_data_sorted_by_date = sortRecordsBy(getAllRecords($mysqli), 'date');
 
+//$timezone = date_default_timezone_get();
+//echo "The current server timezone is: " . $timezone;
 ?>
 
 <!DOCTYPE html>
