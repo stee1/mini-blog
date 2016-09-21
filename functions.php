@@ -7,7 +7,8 @@ function getCommentsByRecord($mysqli, $id_record) {
 
     $result = $mysqli->query($select_query);
     if (!$result) {
-        header("Location: error.php?db_table_read_error=" . $mysqli->error);
+
+        header("Location: error.php?db_table_read_error=" . $mysqli->error . "&sql=" . $select_query);
         exit();
     }
 
@@ -47,7 +48,7 @@ function getAllRecords($mysqli) {
             $result_comments = $mysqli->query($select_query_comments);
 
             if (!$result_comments) {
-                header("Location: error.php?db_table_read_error=" . $mysqli->error);
+                header("Location: error.php?db_table_read_error=" . $mysqli->error . "&sql=" . $select_query_comments);
                 exit();
             }
 
@@ -62,7 +63,7 @@ function getAllRecords($mysqli) {
         }
 
     } else {
-        header("Location: error.php?db_table_read_error=" . $mysqli->error);
+        header("Location: error.php?db_table_read_error=" . $mysqli->error . "&sql=" . $select_query);
         exit();
     }
 

@@ -1,16 +1,30 @@
 <?php
 $error_text = "Ты как сюда попал?";
+$message = "haaax";
+
 if (isset($_GET['page'])) {
-    $error_text = "Страницы '" . $_GET['page'] . "' не существует. Уходите от сюда!";
+    $message = htmlspecialchars($_GET['page']);
+    $message = addslashes($message);
+    $error_text = "Страницы '" . $message . "' не существует. Уходите от сюда!";
 }
 if (isset($_GET['db_error'])) {
-    $error_text = "Ошибка соединения с базой данных - " . $_GET['db_error'];
+    $message = htmlspecialchars($_GET['db_error']);
+    $message = addslashes($message);
+    $error_text = "Ошибка соединения с базой данных - " . $message;
 }
 if (isset($_GET['db_table_read_error'])) {
-    $error_text = "Ошибка чтения из базы данных - " . $_GET['db_table_read_error'];
+    $message = htmlspecialchars($_GET['db_table_read_error']);
+    $message = addslashes($message);
+    $sql = htmlspecialchars($_GET['sql']);
+    $sql = addslashes($sql);
+    $error_text = "Ошибка чтения из базы данных - " . $message . "<br><br>SQL: " . $sql;
 }
 if (isset($_GET['db_table_write_error'])) {
-    $error_text = "Ошибка записи в базу данных - " . $_GET['db_table_write_error'] . "<br><br>SQL: " . $_GET['sql'];
+    $message = htmlspecialchars($_GET['db_table_write_error']);
+    $message = addslashes($message);
+    $sql = htmlspecialchars($_GET['sql']);
+    $sql = addslashes($sql);
+    $error_text = "Ошибка записи в базу данных - " . $message . "<br><br>SQL: " . $sql;
 }
 ?>
 

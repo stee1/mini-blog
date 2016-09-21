@@ -4,11 +4,19 @@ require_once 'functions.php';
 $all_data_sorted_by_comments = sortRecordsBy(getAllRecords($mysqli), 'num_comments');
 
 foreach ($all_data_sorted_by_comments as $record) {
-    if (empty($_GET['id'])) {
-        echo "error";
-        $current_record = null;
+    if (!isset( $_GET['id'])) {
+        header("Location: error.php?page=" . "record без идентификатора пользователя");
+        exit();
     }
-    if ($record['id_record'] == $_GET['id']) {
+    $id_record = htmlspecialchars($_GET['id'], ENT_QUOTES);
+    $id_record = addslashes($id_record);
+    if( !is_numeric($id_record) )
+    {
+        header("Location: error.php?page=" . "неверное значение идентификатора пользователя");
+        exit();
+    }
+
+    if ($record['id_record'] == $id_record) {
         $current_record = $record;
     }
 }
